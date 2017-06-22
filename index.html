@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Protest Sign Generator</title>
+	<script type="text/javascript" src="taffy-min.js"></script>
+	<script type="text/javascript" src="javascript.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="html2canvas.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<link href="https://fonts.googleapis.com/css?family=Bungee" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body style="padding: 15px;">
+	<h1>Join the Protest: <a href="http://www.clarkcountyactivism.com/event/save-the-aca-sign-waving-event/">Save the ACA Sign Waving Event</a></h1>
+	<div class="row" style="padding: 5px;">
+		<div class="col-xs-4">
+			<select id="tags" class="form-control">
+				<option value="secrecy">Secrecy</option>
+				<option value="medicaid">Medicaid</option>
+				<option value="ppact">Planned Parenthood</option>
+				<option value="taxes">Tax Cuts</option>
+				<option value="coverage">Loss of Coverage</option>
+				<option value="premiums">Rising Premiums</option>
+				<option value="mental">Mental Health</option>
+				<option value="existing">Pre-existing Conditions</option>
+				<option value="lgbtq">LGBTQ Support</option>
+				<option value="veterans">Veteran Support</option>
+			</select>
+		</div>
+		<div class="col-xs-8">
+		    <button class="btn btn-default" onclick="signSelect()">Create a Random Sign</button>
+			<input id="btn-Preview-Image" class="btn btn-default" style="display:none;" type="button" value="Generate My Sign Image" />
+		    <a id="btn-Convert-Html2Image" class="btn btn-default" role="button" style="display:none;" href="#"  data-toggle="tooltip" title="If the download fails, right click the image and save as">Download My Sign</a>			
+		</div>
+    </div>
+    <div id="previewImage" style="padding:5px;">
+    </div>
+    <div class="row">
+    	<div class="col-xs-6">
+    		<h4>Preview:</h4>
+		    <div id="signThumb" style="background-repeat: no-repeat; background-size: cover; text-align: center;">
+				<h1 id="thumbText" style="font-family: 'Bungee', cursive; color: white; text-shadow: 2px 2px 4px black; font-size: 3em; padding: 1em; line-height: 1.25em;"></h1>
+				<p id="thumbSource" style="font-weight: bold; font-size: .75em; text-shadow: 1px 1px 2px black; padding-bottom: 1em;">
+		    		<a id="thumbLink" style="color: white; text-decoration: none;"></a>
+		    	</p>
+			</div>
+		</div>
+		<div class="col-xs-6">
+			<h4>Actual Size:</h4>
+		    <div id="signDisplay" style="background-repeat: no-repeat; background-size: cover; text-align: center; width: 2400px;">
+				<h1 id="signText" style="font-family: 'Bungee', cursive; color: white; text-shadow: 3px 3px 8px black; font-size: 12em; padding: 1em; line-height: 1.25em;"></h1>
+				<p id="signSource" style="font-weight: bold; font-size: 2em; text-shadow: 1px 1px 4px black; padding-bottom: 1em;">
+		    		<a id="signLink" style="color: white; text-decoration: none;"></a>
+		    	</p>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		function signSelect() {
+			var e = document.getElementById("tags");
+			var tag = e.options[e.selectedIndex].value;
+			document.getElementById("previewImage").innerHTML = "";
+			document.getElementById("btn-Preview-Image").style.display = "inline-block";
+			document.getElementById("btn-Convert-Html2Image").style.display = "none";
+			newSign(tag);
+		}
+
+		var element = $("#signDisplay"); // global variable
+		var getCanvas; // global variable
+
+	    $("#btn-Preview-Image").on('click', function () {
+	         document.getElementById("previewImage").innerHTML = "<h4>Downloadable Image:</h4>";
+	         html2canvas(element, {
+	         onrendered: function (canvas) {
+	                $("#previewImage").append(canvas);
+	                getCanvas = canvas;
+	             }
+	         });
+	         document.getElementById("btn-Convert-Html2Image").style.display = "inline-block";
+	    });
+
+		$("#btn-Convert-Html2Image").on('click', function () {
+		    var imgageData = getCanvas.toDataURL("image/png");
+		    // Now browser starts downloading it instead of just showing it
+		    var newData = imgageData.replace(/^data:image\/png/, "data:application/octet-stream");
+		    $("#btn-Convert-Html2Image").attr("download", "protest_sign.png").attr("href", newData);
+		    // window.location.reload(true);
+		});
+	</script>
+</body>
+</html>
